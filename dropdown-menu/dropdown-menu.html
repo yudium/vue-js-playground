@@ -1,0 +1,101 @@
+<!--
+    Thanks to: https://codepen.io/mikerojas87/pen/rojKb for HTML + CSS
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800,300" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="dropdown-menu.css">
+    <script src="../assets/js/vue.js"></script>
+    <script>
+    const MENU_ITEMS = [
+        ['Home', '/home'],
+        ['Services', '/services', [
+            ['Web Design', '/services/web-design'],
+            ['Web Development', '/services/web-dev'],
+            ['Web Hosting', '/services/web-hosting'],
+        ]],
+        ['Download', '', [
+            ['Linux', '/download/linux'],
+            ['Mac OSX', '/download/mac'],
+        ]],
+    ]
+    </script>
+</head>
+<body>
+
+    <div id="app">
+        <h1>A Simple Dropdown Menu</h1>
+        <!--
+        <nav id="dropdown-menu" class="nav">
+        <ul class="nav__menu">
+            <li class="nav__menu-item"><a>Home</a></li>
+            <li class="nav__menu-item"><a>Services</a>
+            <ul class="nav__submenu">
+                <li class="nav__submenu-item"> <a>Web Design</a></li>
+                <li class="nav__submenu-item"> <a>Web Development</a></li>
+                <li class="nav__submenu-item"> <a>Web Hosting</a></li>
+            </ul>
+            </li>
+            <li class="nav__menu-item"><a>Blog</a></li>
+            <li class="nav__menu-item"><a>Contact</a></li>
+        </nav>
+        -->
+        <dropdown-menu v-bind:menu="MENU_ITEMS"></dropdown-menu>
+    </div>
+
+<script id="dropdown-menu" type="x/template">
+<nav class="nav">
+<ul class="nav__menu">
+    <li class="nav__menu-item" v-for="(m,idx) in menu" v-on:click="toggle(idx)"><a>{{ m[0] }}</a>
+        <ul class="nav__submenu" v-bind:ref="'nav__submenu-'+idx">
+            <li class="nav__submenu-item" v-for="subm in m[2]"> <a>{{ subm[0] }}</a></li>
+        </ul>
+    </li>
+</ul>
+</nav>
+</script>
+
+<script>
+Vue.component('dropdown-menu', {
+    props: ['menu'],
+    template: '#dropdown-menu',
+    created: function () {
+        let self = this;
+        window.addEventListener('click', function (e) {
+            if (!self.$el.contains(e.target)) {
+                self.closeAll();
+            }
+        })
+    },
+    methods: {
+        toggle: function (index) {
+            this.closeAll();
+            let klass=''
+            let el = this.$refs['nav__submenu-'+index][0];
+            let isActive = (el.className.includes('active'));
+            el.className=el.className.replace(' active', '');
+            if (!isActive) klass = ' active';
+            el.className=el.className+klass;
+        },
+        closeAll: function () {
+            for (let el_refname in this.$refs) {
+                let el = this.$refs[el_refname][0];
+                el.className=el.className.replace(' active', '');
+            }
+        }
+    },
+});
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        MENU_ITEMS: MENU_ITEMS,
+    },
+});
+</script>
+</body>
+</html>
+

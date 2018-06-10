@@ -49,6 +49,9 @@ h1 {
   display: inline-block;
   position: relative;
 }
+.nav__menu-item.active {
+  background-color: #9b59b6;
+}
 .nav__menu-item:hover {
   background-color: #9b59b6;
 }
@@ -57,6 +60,9 @@ h1 {
   display: block;
 }
 */
+.nav__menu-item.active .nav__submenu {
+    display: block;
+}
 .nav__submenu {
   font-weight: 300;
   text-transform: none;

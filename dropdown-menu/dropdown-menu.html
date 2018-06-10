@@ -50,7 +50,7 @@
 <nav class="nav">
 <ul class="nav__menu">
     <li class="nav__menu-item" v-for="(m,idx) in menu" v-bind:ref="'nav__menu-item-'+idx" v-on:click="toggle(idx)"><a>{{ m[0] }}</a>
-        <ul class="nav__submenu">
+        <ul v-if="m[2] != undefined" class="nav__submenu">
             <li class="nav__submenu-item" v-for="subm in m[2]"> <a>{{ subm[0] }}</a></li>
         </ul>
     </li>
@@ -75,6 +75,8 @@ Vue.component('dropdown-menu', {
             let el = this.$refs['nav__menu-item-'+index][0];
             let isActive = (el.className.includes('active'));
 
+            if (!this.isMenuHasDropdown(el)) return;
+
             // toggle
             if (isActive) {
                 el.className=el.className.replace(' active', '');
@@ -90,7 +92,10 @@ Vue.component('dropdown-menu', {
                 let el = this.$refs[el_refname][0];
                 el.className=el.className.replace(' active', '');
             }
-        }
+        },
+        isMenuHasDropdown(el) {
+            return (null != el.querySelector('.nav__submenu'))
+        },
     },
 });
 

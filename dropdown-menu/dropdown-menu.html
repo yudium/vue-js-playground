@@ -72,13 +72,18 @@ Vue.component('dropdown-menu', {
     },
     methods: {
         toggle: function (index) {
-            this.closeAll();
-            let klass=''
             let el = this.$refs['nav__menu-item-'+index][0];
             let isActive = (el.className.includes('active'));
-            el.className=el.className.replace(' active', '');
-            if (!isActive) klass = ' active';
-            el.className=el.className+klass;
+
+            // toggle
+            if (isActive) {
+                el.className=el.className.replace(' active', '');
+            }
+            // open menu for the first time or switching to different menu
+            else {
+                this.closeAll();
+                el.className=el.className+' active';
+            }
         },
         closeAll: function () {
             for (let el_refname in this.$refs) {
